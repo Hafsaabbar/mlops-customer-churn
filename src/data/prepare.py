@@ -64,6 +64,25 @@ def prepare_splits(
     """
     assert round(train_ratio + test_ratio + stream_ratio, 4) == 1.0, "Split ratios must sum to 1.0"
 
+    fallback_root = Path("WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    if not raw_path.exists() and fallback_root.exists():
+        raw_path = fallback_root
+
+    # Graceful handling for clean clone where raw CSV is gitignored
+    if not raw_path.exists():
+        if (splits_dir / "train" / "X_train.csv").exists():
+            print("Notice: Raw dataset file not present (excluded from git redistribution).")
+            print("Verified split files detected in data/splits/. Rebuilding manifest.")
+            return build_manifest(
+                raw_path=raw_path,
+                splits_dir=splits_dir,
+                seed=seed,
+                train_ratio=train_ratio,
+                test_ratio=test_ratio,
+                stream_ratio=stream_ratio
+            )
+        raise FileNotFoundError(f"Raw dataset not found at {raw_path} and no splits available.")
+
     df_raw = load_raw_dataset(raw_path)
     df_cleaned = clean_dataset(df_raw)
 

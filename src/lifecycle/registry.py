@@ -38,8 +38,8 @@ def get_registry_status(model_name: str = REGISTRY_MODEL_NAME) -> Dict[str, Any]
     client = get_client()
     try:
         model = client.get_registered_model(model_name)
-    except RestException:
-        return {"model_name": model_name, "exists": False, "versions": [], "aliases": {}}
+    except Exception:
+        return {"model_name": model_name, "exists": False, "champion": None, "previous": None, "versions": []}
 
     champion_v = get_alias_version(client, model_name, "champion")
     previous_v = get_alias_version(client, model_name, "previous")

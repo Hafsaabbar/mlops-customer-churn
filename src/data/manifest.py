@@ -115,6 +115,9 @@ def verify_manifest(manifest_path: Path = Path("MANIFEST.json")) -> bool:
         file_path = Path(info["path"])
         expected_hash = info["sha256"]
         if not file_path.exists():
+            if key == "raw_source":
+                # Raw source dataset is excluded from git redistribution per data governance
+                continue
             errors.append(f"Missing file: {file_path}")
             all_valid = False
             continue
