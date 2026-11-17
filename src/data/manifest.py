@@ -11,13 +11,18 @@ from pathlib import Path
 from typing import Dict, Any, List
 
 def compute_sha256(file_path: Path) -> str:
-    """Compute SHA-256 hash of a file."""
+    """
+    Compute SHA-256 hash of a file.
+    Normalizes CRLF to LF for text/csv files to ensure cross-platform cryptographic invariance.
+    """
     if not file_path.exists():
         raise FileNotFoundError(f"File not found for hash calculation: {file_path}")
     hasher = hashlib.sha256()
     with open(file_path, "rb") as f:
-        while chunk := f.read(65536):
-            hasher.update(chunk)
+        content = f.read()
+    if file_path.suffix.lower() in [".csv", ".json", ".txt", ".md", ".yml", ".yaml"]:
+        content = content.replace(b"\r\n", b"\n")
+    hasher.update(content)
     return hasher.hexdigest()
 
 def get_git_commit_hash() -> str:

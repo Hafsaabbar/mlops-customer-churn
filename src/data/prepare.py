@@ -118,8 +118,8 @@ def prepare_splits(
     }.items():
         out_dir = splits_dir / split_name
         out_dir.mkdir(parents=True, exist_ok=True)
-        X_s.to_csv(out_dir / f"X_{split_name}.csv", index=False)
-        y_s.to_csv(out_dir / f"y_{split_name}.csv", index=False)
+        X_s.to_csv(out_dir / f"X_{split_name}.csv", index=False, lineterminator="\n")
+        y_s.to_csv(out_dir / f"y_{split_name}.csv", index=False, lineterminator="\n")
 
     print(f"Data splits successfully created with seed={seed}:")
     print(f"  Train: X={X_train.shape}, y={y_train.shape}")
