@@ -57,3 +57,4 @@ def test_find_optimal_threshold_range():
     opt = find_optimal_threshold(y_true, y_prob)
     assert 0.05 <= opt["optimal_threshold"] <= 0.95
     assert opt["min_total_cost"] >= 0.0
+

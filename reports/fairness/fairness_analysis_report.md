@@ -1,6 +1,6 @@
 # Rapport d'Analyse d'Équité et de Biais Algorithmique
 
-- **Date d'audit** : 2026-11-17T15:41:19.125441+00:00
+- **Date d'audit** : 2026-11-17T16:35:59.635878+00:00
 - **Seuil de décision appliqué** : 0.38
 - **Attributs protégés étudiés** : `gender` (Genre) et `SeniorCitizen` (Âge binaire).
 

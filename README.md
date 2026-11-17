@@ -152,3 +152,4 @@ Pour la prise en main par le binôme (implémentation FastAPI, Docker, Evidently
 - Contrat Pydantic / JSON des caractéristiques d'entrée : [schema.json](schema.json).
 - Modèle autonome sérialisé : `artifacts/champion_model.joblib`.
 - Tag Git stable du livrable : **`handoff-A`**.
+

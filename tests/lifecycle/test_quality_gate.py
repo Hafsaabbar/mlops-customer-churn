@@ -68,3 +68,4 @@ def test_quality_gate_data_validation_failure_rejected(tmp_path):
     assert result["decision"] == "REJECTED"
     assert result["accepted"] is False
     assert any("Data validation" in r for r in result["reasons"])
+

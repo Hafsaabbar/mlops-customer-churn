@@ -1,6 +1,6 @@
 # Rapport de Feedback Différé Hors-Ligne (Stream Evaluation)
 
-- **Date de rejeu** : 2026-11-17T15:41:21.818108+00:00
+- **Date de rejeu** : 2026-11-17T16:36:04.539748+00:00
 - **Version Champion Évaluée** : v1
 - **Échantillons Stream Rejoués** : 1057 clients
 - **Seuil de Décision Appliqué** : 0.38

@@ -78,3 +78,4 @@ def get_model_pipelines(seed: int = 42) -> Dict[str, Pipeline]:
         ])
     }
     return pipelines
+

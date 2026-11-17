@@ -74,3 +74,4 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 Ouvrez ensuite votre navigateur sur `http://127.0.0.1:5000`.
 Vous pouvez y observer l'expérience `customer-churn-experiment` ainsi que le modèle enregistré `churn-model` avec ses alias `champion` et `previous`.
+

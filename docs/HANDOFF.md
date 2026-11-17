@@ -149,3 +149,4 @@ champion_model = mlflow.sklearn.load_model("models:/churn-model@champion")
    L'attribut est une variable binaire simplifiée présente dans le dataset d'origine. Les conclusions d'équité doivent tenir compte du déséquilibre d'effectif (~16% de seniors).
 3. **Registre MLflow Local** :
    Le registre fonctionne sur base SQLite locale (`mlflow.db`). Il ne dépend d'aucun cloud tiers et est reconstructible sur toute machine en lançant `make all`.
+

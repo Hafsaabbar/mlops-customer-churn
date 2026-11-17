@@ -48,3 +48,4 @@ def test_rollback_transitions():
 
         # Re-rollback to restore state
         rollback_champion(REGISTRY_MODEL_NAME)
+

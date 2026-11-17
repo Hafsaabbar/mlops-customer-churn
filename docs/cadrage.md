@@ -51,3 +51,4 @@ Le projet est divisé en deux parties complémentaires :
    Configuration de MLflow avec un backend SQLite (`sqlite:///mlflow.db`) permettant l'exécution locale complète des fonctionnalités de Model Registry, aliases (`champion`, `previous`) et transitions, sans dépendre d'un serveur distant payant.
 4. **Optimisation du Seuil guidée par le Coût Métier** :
    Dans ce cas d'usage, le coût d'un faux négatif ($C_{FN} = 500\$$ - perte nette du client) dépasse largement le coût d'un faux positif ($C_{FP} = 50\$$ - offre de rétention). Le seuil de décision est ajusté en conséquence sur l'ensemble d'entraînement pour minimiser le coût global d'exploitation.
+

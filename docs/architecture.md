@@ -98,3 +98,4 @@ flowchart TD
 | `artifacts/` | Modèle champion (.joblib) et métadonnées JSON | Oui |
 | `reports/` | Rapports JSON, Markdown et graphiques générés | Oui |
 | `mlflow.db` / `mlruns/` | Base de suivi d'expériences et registre de modèles local | Non (reconstructible via `make all`) |
+

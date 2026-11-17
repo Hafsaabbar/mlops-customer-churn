@@ -102,3 +102,4 @@ def evaluate_quality_gate(
     (output_dir / f"gate_decision_v{candidate_version}.json").write_text(json.dumps(gate_result, indent=2), encoding="utf-8")
 
     return gate_result
+

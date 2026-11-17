@@ -90,3 +90,4 @@ def test_schema_json_contract():
     assert "MonthlyCharges" in contract["properties"]
     assert "TotalCharges" in contract["properties"]
     assert "Contract" in contract["properties"]
+

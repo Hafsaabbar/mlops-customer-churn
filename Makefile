@@ -59,3 +59,4 @@ all: prepare validate train gate fairness status
 clean:
 	rm -rf .pytest_cache htmlcov .coverage
 	find . -type d -name "__pycache__" -exec rm -rf {} +
+

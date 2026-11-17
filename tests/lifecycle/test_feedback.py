@@ -21,3 +21,4 @@ def test_retrain_rejection_scenario():
     res = retrain_and_gate_candidate(force_failing=True)
     assert res["promotion_result"]["promoted"] is False
     assert res["promotion_result"]["gate_decision"] == "REJECTED"
+

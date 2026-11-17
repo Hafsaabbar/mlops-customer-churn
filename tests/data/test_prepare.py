@@ -81,3 +81,4 @@ def test_manifest_verification():
     """Verify MANIFEST.json exists and all hashes match data files on disk."""
     assert Path("MANIFEST.json").exists()
     assert verify_manifest() is True
+
