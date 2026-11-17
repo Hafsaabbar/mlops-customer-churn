@@ -1,0 +1,93 @@
+{
+  "project": "mlops-customer-churn",
+  "dataset_name": "IBM Telco Customer Churn",
+  "source_url": "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
+  "created_at_utc": "2026-11-17T15:30:30.656704+00:00",
+  "random_seed": 42,
+  "split_ratios": {
+    "train": 0.7,
+    "test": 0.15,
+    "stream": 0.15
+  },
+  "git_commit": "uncommitted_or_git_unavailable",
+  "splits_dimensions": {
+    "train/X_train.csv": [
+      4930,
+      20
+    ],
+    "train/y_train.csv": [
+      4930,
+      1
+    ],
+    "test/X_test.csv": [
+      1056,
+      20
+    ],
+    "test/y_test.csv": [
+      1056,
+      1
+    ],
+    "stream/X_stream.csv": [
+      1057,
+      20
+    ],
+    "stream/y_stream.csv": [
+      1057,
+      1
+    ]
+  },
+  "feature_columns": [
+    "customerID",
+    "gender",
+    "SeniorCitizen",
+    "Partner",
+    "Dependents",
+    "tenure",
+    "PhoneService",
+    "MultipleLines",
+    "InternetService",
+    "OnlineSecurity",
+    "OnlineBackup",
+    "DeviceProtection",
+    "TechSupport",
+    "StreamingTV",
+    "StreamingMovies",
+    "Contract",
+    "PaperlessBilling",
+    "PaymentMethod",
+    "MonthlyCharges",
+    "TotalCharges"
+  ],
+  "target_column": "Churn",
+  "file_hashes": {
+    "raw_source": {
+      "path": "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv",
+      "sha256": "88be4b93fbe0cc83421af1c503794c97c342eca914c1576db7c276e61d61358a"
+    },
+    "train/X_train.csv": {
+      "path": "data/splits/train/X_train.csv",
+      "sha256": "4f0004bee0e16a6929ca6eeec943968de3a5764b63f5c920e7ba43debb22ac8d"
+    },
+    "train/y_train.csv": {
+      "path": "data/splits/train/y_train.csv",
+      "sha256": "837ebc4aca14bb8963ffa91f3d3ae4b6c46747d09d9b43202bd300f94bc50c9a"
+    },
+    "test/X_test.csv": {
+      "path": "data/splits/test/X_test.csv",
+      "sha256": "79ae08c5b26922535ab1edd4b60c543bb7feb5f58308ae455ceededa5c50eb52"
+    },
+    "test/y_test.csv": {
+      "path": "data/splits/test/y_test.csv",
+      "sha256": "a09114b84304f3842eaa2fc24e3253dd893f48959739885a04c8914e7c1f5415"
+    },
+    "stream/X_stream.csv": {
+      "path": "data/splits/stream/X_stream.csv",
+      "sha256": "cafb1536d015dddceff1a1dd4625e257b0e2c111052cad65a1584f0433459566"
+    },
+    "stream/y_stream.csv": {
+      "path": "data/splits/stream/y_stream.csv",
+      "sha256": "f21897c299b18a02d7e9b856ee4e93e85ccce16314abfab946a002ce5ea5b2eb"
+    }
+  },
+  "reproduction_command": "python -m src.data.prepare"
+}
