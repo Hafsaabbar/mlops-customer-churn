@@ -2,14 +2,14 @@
   "project": "mlops-customer-churn",
   "dataset_name": "IBM Telco Customer Churn",
   "source_url": "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
-  "created_at_utc": "2026-11-17T15:30:30.656704+00:00",
+  "created_at_utc": "2026-11-17T15:44:16.447534+00:00",
   "random_seed": 42,
   "split_ratios": {
     "train": 0.7,
     "test": 0.15,
     "stream": 0.15
   },
-  "git_commit": "uncommitted_or_git_unavailable",
+  "git_commit": "f045b336b4ccde99b802f71f53473f226ab9a89f",
   "splits_dimensions": {
     "train/X_train.csv": [
       4930,
