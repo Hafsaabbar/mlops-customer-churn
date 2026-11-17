@@ -1,0 +1,45 @@
+{
+  "model_name": "churn-model",
+  "candidate_version": "3",
+  "decision": "REJECTED",
+  "accepted": false,
+  "metrics": {
+    "f1": 0.2,
+    "recall": 0.3,
+    "roc_auc": 0.5
+  },
+  "checks": [
+    {
+      "name": "data_validation",
+      "status": "PASSED",
+      "message": "All data splits conform to Pandera schema."
+    },
+    {
+      "name": "beat_baselines",
+      "status": "FAILED",
+      "message": "F1 0.2 fails to beat baseline threshold 0.42."
+    },
+    {
+      "name": "min_recall",
+      "status": "FAILED",
+      "message": "Recall 0.3 < 0.7."
+    },
+    {
+      "name": "min_f1",
+      "status": "FAILED",
+      "message": "F1 0.2 < 0.5."
+    },
+    {
+      "name": "min_roc_auc",
+      "status": "FAILED",
+      "message": "ROC-AUC 0.5 < 0.75."
+    }
+  ],
+  "reasons": [
+    "F1-score (0.2) does not beat naive baselines (0.42).",
+    "Recall (0.3) below required minimum (0.7).",
+    "F1-score (0.2) below required minimum (0.5).",
+    "ROC-AUC (0.5) below required minimum (0.75)."
+  ],
+  "timestamp_utc": "2026-11-17T15:40:50.039740+00:00"
+}

@@ -1,0 +1,49 @@
+{
+  "model_name": "churn-model",
+  "candidate_version": "2",
+  "decision": "ACCEPTED",
+  "accepted": true,
+  "metrics": {
+    "threshold": 0.2,
+    "precision": 0.3854,
+    "recall": 0.9607,
+    "f1": 0.5501,
+    "roc_auc": 0.8449,
+    "pr_auc": 0.6315,
+    "tp": 269,
+    "fp": 429,
+    "tn": 347,
+    "fn": 11,
+    "total_cost": 26950.0,
+    "avg_cost_per_customer": 25.52
+  },
+  "checks": [
+    {
+      "name": "data_validation",
+      "status": "PASSED",
+      "message": "All data splits conform to Pandera schema."
+    },
+    {
+      "name": "beat_baselines",
+      "status": "PASSED",
+      "message": "F1 0.5501 exceeds baseline threshold 0.42."
+    },
+    {
+      "name": "min_recall",
+      "status": "PASSED",
+      "message": "Recall 0.9607 >= 0.7."
+    },
+    {
+      "name": "min_f1",
+      "status": "PASSED",
+      "message": "F1 0.5501 >= 0.5."
+    },
+    {
+      "name": "min_roc_auc",
+      "status": "PASSED",
+      "message": "ROC-AUC 0.8449 >= 0.75."
+    }
+  ],
+  "reasons": [],
+  "timestamp_utc": "2026-11-17T15:38:26.741204+00:00"
+}

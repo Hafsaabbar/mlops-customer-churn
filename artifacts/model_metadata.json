@@ -1,0 +1,22 @@
+{
+  "model_name": "random_forest",
+  "registry_name": "churn-model",
+  "registry_version": "2",
+  "run_id": "32b1e0ce5859482f9d12058cf47fa1f9",
+  "optimal_threshold": 0.38,
+  "random_seed": 42,
+  "metrics_optimal": {
+    "threshold": 0.38,
+    "precision": 0.4749,
+    "recall": 0.8786,
+    "f1": 0.6165,
+    "roc_auc": 0.8416,
+    "pr_auc": 0.6366,
+    "tp": 246,
+    "fp": 272,
+    "tn": 504,
+    "fn": 34,
+    "total_cost": 30600.0,
+    "avg_cost_per_customer": 28.98
+  }
+}

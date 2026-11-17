@@ -1,0 +1,114 @@
+{
+  "timestamp_utc": "2026-11-17T15:41:19.125441+00:00",
+  "decision_threshold": 0.38,
+  "gender_disparity": {
+    "Female": {
+      "n_samples": 531,
+      "actual_churn_rate": 0.2768,
+      "precision": 0.4905,
+      "recall": 0.8776,
+      "f1": 0.6293,
+      "fpr": 0.349,
+      "fnr": 0.1224,
+      "tp": 129,
+      "fp": 134,
+      "tn": 250,
+      "fn": 18
+    },
+    "Male": {
+      "n_samples": 525,
+      "actual_churn_rate": 0.2533,
+      "precision": 0.4588,
+      "recall": 0.8797,
+      "f1": 0.6031,
+      "fpr": 0.352,
+      "fnr": 0.1203,
+      "tp": 117,
+      "fp": 138,
+      "tn": 254,
+      "fn": 16
+    }
+  },
+  "senior_citizen_disparity": {
+    "Non-Senior (0)": {
+      "n_samples": 869,
+      "actual_churn_rate": 0.2313,
+      "precision": 0.4503,
+      "recall": 0.8557,
+      "f1": 0.5901,
+      "fpr": 0.3144,
+      "fnr": 0.1443,
+      "tp": 172,
+      "fp": 210,
+      "tn": 458,
+      "fn": 29
+    },
+    "Senior Citizen (1)": {
+      "n_samples": 187,
+      "actual_churn_rate": 0.4225,
+      "precision": 0.5441,
+      "recall": 0.9367,
+      "f1": 0.6884,
+      "fpr": 0.5741,
+      "fnr": 0.0633,
+      "tp": 74,
+      "fp": 62,
+      "tn": 46,
+      "fn": 5
+    }
+  },
+  "intersectional_disparity": {
+    "Female_NonSenior": {
+      "n_samples": 426,
+      "actual_churn_rate": 0.2394,
+      "precision": 0.4684,
+      "recall": 0.8725,
+      "f1": 0.6096,
+      "fpr": 0.3117,
+      "fnr": 0.1275,
+      "tp": 89,
+      "fp": 101,
+      "tn": 223,
+      "fn": 13
+    },
+    "Female_Senior": {
+      "n_samples": 105,
+      "actual_churn_rate": 0.4286,
+      "precision": 0.5479,
+      "recall": 0.8889,
+      "f1": 0.678,
+      "fpr": 0.55,
+      "fnr": 0.1111,
+      "tp": 40,
+      "fp": 33,
+      "tn": 27,
+      "fn": 5
+    },
+    "Male_NonSenior": {
+      "n_samples": 443,
+      "actual_churn_rate": 0.2235,
+      "precision": 0.4323,
+      "recall": 0.8384,
+      "f1": 0.5704,
+      "fpr": 0.3169,
+      "fnr": 0.1616,
+      "tp": 83,
+      "fp": 109,
+      "tn": 235,
+      "fn": 16
+    },
+    "Male_Senior": {
+      "n_samples": 82,
+      "actual_churn_rate": 0.4146,
+      "precision": 0.5397,
+      "recall": 1.0,
+      "f1": 0.701,
+      "fpr": 0.6042,
+      "fnr": 0.0,
+      "tp": 34,
+      "fp": 29,
+      "tn": 19,
+      "fn": 0
+    }
+  }
+}

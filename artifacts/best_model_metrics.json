@@ -1,0 +1,14 @@
+{
+  "threshold": 0.2,
+  "precision": 0.3854,
+  "recall": 0.9607,
+  "f1": 0.5501,
+  "roc_auc": 0.8449,
+  "pr_auc": 0.6315,
+  "tp": 269,
+  "fp": 429,
+  "tn": 347,
+  "fn": 11,
+  "total_cost": 26950.0,
+  "avg_cost_per_customer": 25.52
+}

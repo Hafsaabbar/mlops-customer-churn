@@ -1,0 +1,122 @@
+[
+  {
+    "timestamp_utc": "2026-11-17T15:37:23.917104+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "1",
+    "gate_decision": "ACCEPTED",
+    "accepted": true,
+    "alias_before": {
+      "champion": null,
+      "previous": null
+    },
+    "promoted": true,
+    "alias_after": {
+      "champion": "1",
+      "previous": null
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:38:26.742939+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "2",
+    "gate_decision": "ACCEPTED",
+    "accepted": true,
+    "alias_before": {
+      "champion": "1",
+      "previous": null
+    },
+    "promoted": true,
+    "alias_after": {
+      "champion": "2",
+      "previous": "1"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:40:50.041039+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "3",
+    "gate_decision": "REJECTED",
+    "accepted": false,
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "promoted": false,
+    "reasons": [
+      "F1-score (0.2) does not beat naive baselines (0.42).",
+      "Recall (0.3) below required minimum (0.7).",
+      "F1-score (0.2) below required minimum (0.5).",
+      "ROC-AUC (0.5) below required minimum (0.75)."
+    ],
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:40:50.118298+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "1",
+    "gate_decision": "REJECTED",
+    "accepted": false,
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "promoted": false,
+    "reasons": [
+      "F1-score (0.2) does not beat naive baselines (0.42).",
+      "Recall (0.3) below required minimum (0.7).",
+      "F1-score (0.2) below required minimum (0.5).",
+      "ROC-AUC (0.5) below required minimum (0.75)."
+    ],
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:41:31.138525+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "4",
+    "gate_decision": "REJECTED",
+    "accepted": false,
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "promoted": false,
+    "reasons": [
+      "F1-score (0.2) does not beat naive baselines (0.42).",
+      "Recall (0.3) below required minimum (0.7).",
+      "F1-score (0.2) below required minimum (0.5).",
+      "ROC-AUC (0.5) below required minimum (0.75)."
+    ],
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:41:31.258504+00:00",
+    "action": "promotion_attempt",
+    "candidate_version": "1",
+    "gate_decision": "REJECTED",
+    "accepted": false,
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "promoted": false,
+    "reasons": [
+      "F1-score (0.2) does not beat naive baselines (0.42).",
+      "Recall (0.3) below required minimum (0.7).",
+      "F1-score (0.2) below required minimum (0.5).",
+      "ROC-AUC (0.5) below required minimum (0.75)."
+    ],
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  }
+]

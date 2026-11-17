@@ -1,0 +1,216 @@
+{
+  "title": "CustomerChurnPredictionInputSchema",
+  "description": "Formal contract of input features for Customer Churn prediction API (Student B).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "gender",
+    "SeniorCitizen",
+    "Partner",
+    "Dependents",
+    "tenure",
+    "PhoneService",
+    "MultipleLines",
+    "InternetService",
+    "OnlineSecurity",
+    "OnlineBackup",
+    "DeviceProtection",
+    "TechSupport",
+    "StreamingTV",
+    "StreamingMovies",
+    "Contract",
+    "PaperlessBilling",
+    "PaymentMethod",
+    "MonthlyCharges",
+    "TotalCharges"
+  ],
+  "optional": [
+    "customerID"
+  ],
+  "target": null,
+  "properties": {
+    "customerID": {
+      "type": "string",
+      "required": false,
+      "description": "Pseudonymized customer identifier (optional in real-time prediction)."
+    },
+    "gender": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Female",
+        "Male"
+      ],
+      "description": "Customer gender."
+    },
+    "SeniorCitizen": {
+      "type": "integer",
+      "required": true,
+      "allowed_values": [
+        0,
+        1
+      ],
+      "description": "Whether the customer is a senior citizen (1: Yes, 0: No)."
+    },
+    "Partner": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Yes",
+        "No"
+      ],
+      "description": "Whether the customer has a partner."
+    },
+    "Dependents": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Yes",
+        "No"
+      ],
+      "description": "Whether the customer has dependents."
+    },
+    "tenure": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 72,
+      "description": "Number of months the customer has stayed with the company."
+    },
+    "PhoneService": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Yes",
+        "No"
+      ],
+      "description": "Whether the customer has a phone service."
+    },
+    "MultipleLines": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No phone service"
+      ],
+      "description": "Whether the customer has multiple lines."
+    },
+    "InternetService": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "DSL",
+        "Fiber optic",
+        "No"
+      ],
+      "description": "Customer's internet service provider."
+    },
+    "OnlineSecurity": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has online security."
+    },
+    "OnlineBackup": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has online backup."
+    },
+    "DeviceProtection": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has tech device protection."
+    },
+    "TechSupport": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has technical support."
+    },
+    "StreamingTV": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has streaming TV."
+    },
+    "StreamingMovies": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "No",
+        "Yes",
+        "No internet service"
+      ],
+      "description": "Whether the customer has streaming movies."
+    },
+    "Contract": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Month-to-month",
+        "One year",
+        "Two year"
+      ],
+      "description": "Contract terms of the customer."
+    },
+    "PaperlessBilling": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Yes",
+        "No"
+      ],
+      "description": "Whether the customer uses paperless billing."
+    },
+    "PaymentMethod": {
+      "type": "string",
+      "required": true,
+      "allowed_values": [
+        "Electronic check",
+        "Mailed check",
+        "Bank transfer (automatic)",
+        "Credit card (automatic)"
+      ],
+      "description": "The customer's payment method."
+    },
+    "MonthlyCharges": {
+      "type": "number",
+      "format": "float",
+      "required": true,
+      "min": 10.0,
+      "max": 150.0,
+      "description": "Amount billed to the customer monthly ($)."
+    },
+    "TotalCharges": {
+      "type": "number",
+      "format": "float",
+      "required": true,
+      "min": 0.0,
+      "max": 10000.0,
+      "description": "Total amount billed to customer ($). Must be 0.0 if tenure=0."
+    }
+  }
+}

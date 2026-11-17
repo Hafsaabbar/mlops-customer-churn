@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-11-17T15:41:21.818108+00:00",
+  "simulation_type": "offline_delayed_feedback_replay",
+  "champion_version": "1",
+  "n_stream_observations": 1057,
+  "threshold_used": 0.38,
+  "realized_metrics": {
+    "threshold": 0.38,
+    "precision": 0.5624,
+    "recall": 0.9786,
+    "f1": 0.7143,
+    "roc_auc": 0.9347,
+    "pr_auc": 0.8285,
+    "tp": 275,
+    "fp": 214,
+    "tn": 562,
+    "fn": 6,
+    "total_cost": 13700.0,
+    "avg_cost_per_customer": 12.96
+  },
+  "note": "Ground truth labels are replayed from isolated stream split; no real production stream telemetry."
+}

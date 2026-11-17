@@ -1,0 +1,130 @@
+{
+  "baseline_always_no": {
+    "run_id": "0bfd4562f3564ecc909f157c5d49c8db",
+    "selected_threshold": 0.05,
+    "metrics_default": {
+      "threshold": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.2652,
+      "tp": 0,
+      "fp": 0,
+      "tn": 776,
+      "fn": 280,
+      "total_cost": 140000.0,
+      "avg_cost_per_customer": 132.58
+    },
+    "metrics_optimal": {
+      "threshold": 0.05,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.2652,
+      "tp": 0,
+      "fp": 0,
+      "tn": 776,
+      "fn": 280,
+      "total_cost": 140000.0,
+      "avg_cost_per_customer": 132.58
+    }
+  },
+  "baseline_always_yes": {
+    "run_id": "016d7d66cb7c4fb785b32166b89aabac",
+    "selected_threshold": 0.05,
+    "metrics_default": {
+      "threshold": 0.5,
+      "precision": 0.2652,
+      "recall": 1.0,
+      "f1": 0.4192,
+      "roc_auc": 0.5,
+      "pr_auc": 0.2652,
+      "tp": 280,
+      "fp": 776,
+      "tn": 0,
+      "fn": 0,
+      "total_cost": 38800.0,
+      "avg_cost_per_customer": 36.74
+    },
+    "metrics_optimal": {
+      "threshold": 0.05,
+      "precision": 0.2652,
+      "recall": 1.0,
+      "f1": 0.4192,
+      "roc_auc": 0.5,
+      "pr_auc": 0.2652,
+      "tp": 280,
+      "fp": 776,
+      "tn": 0,
+      "fn": 0,
+      "total_cost": 38800.0,
+      "avg_cost_per_customer": 36.74
+    }
+  },
+  "logistic_regression": {
+    "run_id": "d9a3c4348e3e42399e1f63e504ac06f0",
+    "selected_threshold": 0.2,
+    "metrics_default": {
+      "threshold": 0.5,
+      "precision": 0.5067,
+      "recall": 0.8143,
+      "f1": 0.6247,
+      "roc_auc": 0.8449,
+      "pr_auc": 0.6315,
+      "tp": 228,
+      "fp": 222,
+      "tn": 554,
+      "fn": 52,
+      "total_cost": 37100.0,
+      "avg_cost_per_customer": 35.13
+    },
+    "metrics_optimal": {
+      "threshold": 0.2,
+      "precision": 0.3854,
+      "recall": 0.9607,
+      "f1": 0.5501,
+      "roc_auc": 0.8449,
+      "pr_auc": 0.6315,
+      "tp": 269,
+      "fp": 429,
+      "tn": 347,
+      "fn": 11,
+      "total_cost": 26950.0,
+      "avg_cost_per_customer": 25.52
+    }
+  },
+  "random_forest": {
+    "run_id": "0eed962af58a4ca8b16a272a4e89eece",
+    "selected_threshold": 0.19,
+    "metrics_default": {
+      "threshold": 0.5,
+      "precision": 0.5256,
+      "recall": 0.8071,
+      "f1": 0.6366,
+      "roc_auc": 0.8395,
+      "pr_auc": 0.6304,
+      "tp": 226,
+      "fp": 204,
+      "tn": 572,
+      "fn": 54,
+      "total_cost": 37200.0,
+      "avg_cost_per_customer": 35.23
+    },
+    "metrics_optimal": {
+      "threshold": 0.19,
+      "precision": 0.3816,
+      "recall": 0.9607,
+      "f1": 0.5462,
+      "roc_auc": 0.8395,
+      "pr_auc": 0.6304,
+      "tp": 269,
+      "fp": 436,
+      "tn": 340,
+      "fn": 11,
+      "total_cost": 27300.0,
+      "avg_cost_per_customer": 25.85
+    }
+  }
+}

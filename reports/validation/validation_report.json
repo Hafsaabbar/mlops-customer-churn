@@ -1,0 +1,27 @@
+{
+  "timestamp_utc": "2026-11-17T15:31:42.608141+00:00",
+  "overall_valid": true,
+  "splits_validated": {
+    "train": {
+      "valid": true,
+      "n_rows": 4930,
+      "n_columns": 20,
+      "error_count": 0,
+      "errors": []
+    },
+    "test": {
+      "valid": true,
+      "n_rows": 1056,
+      "n_columns": 20,
+      "error_count": 0,
+      "errors": []
+    },
+    "stream": {
+      "valid": true,
+      "n_rows": 1057,
+      "n_columns": 20,
+      "error_count": 0,
+      "errors": []
+    }
+  }
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "timestamp_utc": "2026-11-17T15:38:52.333921+00:00",
+    "action": "rollback",
+    "alias_before": {
+      "champion": "2",
+      "previous": "1"
+    },
+    "status": "SUCCESS",
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:40:50.162541+00:00",
+    "action": "rollback",
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "status": "SUCCESS",
+    "alias_after": {
+      "champion": "2",
+      "previous": "1"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:40:50.217584+00:00",
+    "action": "rollback",
+    "alias_before": {
+      "champion": "2",
+      "previous": "1"
+    },
+    "status": "SUCCESS",
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:41:31.329000+00:00",
+    "action": "rollback",
+    "alias_before": {
+      "champion": "1",
+      "previous": "2"
+    },
+    "status": "SUCCESS",
+    "alias_after": {
+      "champion": "2",
+      "previous": "1"
+    }
+  },
+  {
+    "timestamp_utc": "2026-11-17T15:41:31.404817+00:00",
+    "action": "rollback",
+    "alias_before": {
+      "champion": "2",
+      "previous": "1"
+    },
+    "status": "SUCCESS",
+    "alias_after": {
+      "champion": "1",
+      "previous": "2"
+    }
+  }
+]

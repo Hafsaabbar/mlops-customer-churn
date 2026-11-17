@@ -1,0 +1,42 @@
+[
+  {
+    "cost_ratio_fn_to_fp": 2.0,
+    "cost_fn": 100.0,
+    "cost_fp": 50.0,
+    "optimal_threshold": 0.73,
+    "min_total_cost": 15650.0,
+    "min_avg_cost": 14.82
+  },
+  {
+    "cost_ratio_fn_to_fp": 5.0,
+    "cost_fn": 250.0,
+    "cost_fp": 50.0,
+    "optimal_threshold": 0.37,
+    "min_total_cost": 21550.0,
+    "min_avg_cost": 20.41
+  },
+  {
+    "cost_ratio_fn_to_fp": 10.0,
+    "cost_fn": 500.0,
+    "cost_fp": 50.0,
+    "optimal_threshold": 0.22,
+    "min_total_cost": 26400.0,
+    "min_avg_cost": 25.0
+  },
+  {
+    "cost_ratio_fn_to_fp": 15.0,
+    "cost_fn": 750.0,
+    "cost_fp": 50.0,
+    "optimal_threshold": 0.14,
+    "min_total_cost": 28600.0,
+    "min_avg_cost": 27.08
+  },
+  {
+    "cost_ratio_fn_to_fp": 20.0,
+    "cost_fn": 1000.0,
+    "cost_fp": 50.0,
+    "optimal_threshold": 0.11,
+    "min_total_cost": 29850.0,
+    "min_avg_cost": 28.27
+  }
+]
