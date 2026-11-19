@@ -301,3 +301,39 @@ Toute prédiction réussie est auditée dans `reports/monitoring/predictions_log
 }
 ```
 L'identifiant `customer_id` y est systématiquement pseudonymisé par les 16 premiers caractères hexadécimaux de son empreinte SHA-256 (ou `null` s'il n'était pas fourni).
+
+---
+
+## 6. Tests Automatisés de l'API
+
+### 6.1 Commande d'Exécution
+
+Pour exécuter la suite de tests dédiée à l'API :
+```powershell
+# En environnement virtuel :
+.venv\Scripts\python.exe -m pytest tests/api -v
+
+# Ou via la cible Makefile :
+make test-api
+```
+
+> [!WARNING]
+> Ne lancez jamais `pytest tests/` sans chemin : la suite de tests de la Partie A réécrit des fichiers et rapports versionnés (`reports/gate/`, `mlflow.db`). Seule la suite `tests/api/` doit être exécutée pour valider le service d'inférence.
+
+### 6.2 Périmètre et Couverture des Tests
+
+La suite `tests/api/` valide de bout en bout la robustesse du service :
+- **Cas Nominaux (`test_api.py`)** : Disponibilité `/health`, métadonnées et versioning `/model-info`, prédiction `/predict`, cohérence parfaite des probabilités et décisions sur 5 lignes réelles de `data/splits/stream/X_stream.csv` face au pipeline direct, et identifiant `customerID` facultatif.
+- **Cas Limites de Seuil (`test_api.py`)** : Évaluation à $p = \text{seuil}$ (prédiction `"Yes"`) et $p = \text{seuil} - 10^{-5}$ (prédiction `"No"`, même si la probabilité arrondie à 4 décimales égale le seuil), prouvant l'usage de la probabilité brute pour la décision.
+- **Validation du Contrat Pydantic (`test_api.py`)** : Rejet automatique **422** sans clé `prediction` ni log d'audit pour les 19 champs obligatoires manquants, types invalides, valeurs non autorisées, bornes dépassées, champs inconnus (`extra="forbid"`, fuite de cible `Churn`), et violations des 3 règles métier croisées.
+- **Modèle Indisponible (`test_api.py`)** : Réponse **503** avec message explicite sur métadonnées absentes ou corrompues, ou fichier joblib manquant, sans émettre de prédiction erronée et avec `model_ready == 0`.
+- **Robustesse & Audit (`test_api.py`)** : Gestion d'erreur 500 sans fuite de stack trace interne, contrôle de la pseudonymisation SHA-256 (16 caractères) dans le fichier journal, et tolérance aux défaillances d'écriture du journal.
+- **Cycle de Vie du Chargeur (`test_loader.py`)** : Comportement de `ModelService` selon `USE_REGISTRY` (fallback joblib résilient, synchronisation sur run_id).
+- **Observabilité Prometheus (`test_metrics.py`)** : Présence des métriques standard, étiquetage des routes inconnues sous `endpoint="unmatched"`, et calcul des deltas de requêtes et prédictions.
+
+### 6.3 Éléments Volontairement Mockés
+
+- **Registre MLflow** : L'accès au registre est simulé via `unittest.mock` (`MlflowClient`, `load_model`) ou une base SQLite éphémère afin d'assurer l'isolation et la reproductibilité hors réseau.
+- **Chemin du Journal de Monitoring** : La variable `PREDICTIONS_LOG_PATH` est automatiquement redirigée vers un dossier temporaire (`tmp_path`) pour éviter toute altération de `reports/monitoring/`.
+- **Stubs de Probabilité** : Des classifieurs factices sont injectés ponctuellement pour éprouver avec précision les cas limites du seuil mathématique.
+

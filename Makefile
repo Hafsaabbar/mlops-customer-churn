@@ -4,7 +4,7 @@
 
 PYTHON ?= python
 
-.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean api
+.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean api test-api
 
 help:
 	@echo "Available commands:"
@@ -62,5 +62,9 @@ clean:
 
 api:
 	uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+
+test-api:
+	python -m pytest tests/api -v
+
 
 
