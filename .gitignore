@@ -43,3 +43,6 @@ Thumbs.db
 .env.*
 *.pem
 *.key
+
+# Generated at runtime (part B)
+reports/monitoring/predictions_log.jsonl

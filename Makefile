@@ -4,7 +4,7 @@
 
 PYTHON ?= python
 
-.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean
+.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean api
 
 help:
 	@echo "Available commands:"
@@ -59,4 +59,8 @@ all: prepare validate train gate fairness status
 clean:
 	rm -rf .pytest_cache htmlcov .coverage
 	find . -type d -name "__pycache__" -exec rm -rf {} +
+
+api:
+	uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+
 
