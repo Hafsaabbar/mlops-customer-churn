@@ -1,0 +1,55 @@
+# Version control
+.git
+.gitignore
+.github
+
+# Python
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+*.egg-info
+dist
+build
+
+# Data and training artifacts (not needed at runtime)
+data/
+mlruns/
+mlflow.db
+mlflow.db-shm
+mlflow.db-wal
+
+# Reports (bind-mounted at runtime)
+reports/
+
+# Tests
+tests/
+
+# Documentation
+docs/
+
+# Root-level config / scripts not needed in image
+requirements.txt
+requirements-api.txt
+Makefile
+scripts/
+*.md
+*.png
+*.jpg
+
+# Artifacts: ignore everything except champion model and metadata
+artifacts/*
+!artifacts/champion_model.joblib
+!artifacts/model_metadata.json
+
+# Src subdirs not needed in image (only src/__init__.py + src/api/ are needed)
+src/data
+src/training
+src/lifecycle
+src/validation
+
+# Misc
+.env
+*.log
