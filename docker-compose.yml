@@ -1,0 +1,30 @@
+services:
+  api:
+    build:
+      context: .
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-unknown}
+        MODEL_RUN_ID: ${MODEL_RUN_ID:-unknown}
+        MODEL_VERSION: ${MODEL_VERSION:-unknown}
+    image: churn-api:local
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./reports/monitoring:/app/reports/monitoring
+    environment:
+      METADATA_PATH: ${METADATA_PATH:-artifacts/model_metadata.json}
+      MODEL_PATH: ${MODEL_PATH:-artifacts/champion_model.joblib}
+      # USE_REGISTRY intentionally absent -> defaults to false (no MLflow in container)
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

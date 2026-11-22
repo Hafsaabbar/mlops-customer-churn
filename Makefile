@@ -4,7 +4,7 @@
 
 PYTHON ?= python
 
-.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean api test-api
+.PHONY: help install prepare validate test train gate retrain rollback fairness all status clean api test-api docker-build up down logs
 
 help:
 	@echo "Available commands:"
@@ -66,5 +66,26 @@ api:
 test-api:
 	python -m pytest tests/api -v
 
+docker-build: GIT_COMMIT = $(shell git rev-parse HEAD)
+docker-build: MODEL_RUN_ID = $(shell $(PYTHON) -c "import json;print(json.load(open('artifacts/model_metadata.json'))['run_id'])")
+docker-build: MODEL_VERSION = $(shell $(PYTHON) -c "import json;print(json.load(open('artifacts/model_metadata.json'))['registry_version'])")
+docker-build:
+	docker build \
+		--build-arg GIT_COMMIT=$(GIT_COMMIT) \
+		--build-arg MODEL_RUN_ID=$(MODEL_RUN_ID) \
+		--build-arg MODEL_VERSION=$(MODEL_VERSION) \
+		-t churn-api:local .
+
+up: export GIT_COMMIT = $(shell git rev-parse HEAD)
+up: export MODEL_RUN_ID = $(shell $(PYTHON) -c "import json;print(json.load(open('artifacts/model_metadata.json'))['run_id'])")
+up: export MODEL_VERSION = $(shell $(PYTHON) -c "import json;print(json.load(open('artifacts/model_metadata.json'))['registry_version'])")
+up:
+	docker compose up -d --build
+
+down:
+	docker compose down
+
+logs:
+	docker compose logs api
 
 
