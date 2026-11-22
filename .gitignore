@@ -46,3 +46,4 @@ Thumbs.db
 
 # Generated at runtime (part B)
 reports/monitoring/predictions_log.jsonl
+reports/ci/
