@@ -1,0 +1,126 @@
+{
+  "uid": "churn-api-overview",
+  "title": "Churn API - Overview",
+  "description": "Service health, request traffic, latency and model prediction monitoring for the Customer Churn Prediction API.",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "timezone": "browser",
+  "tags": ["churn", "api", "monitoring"],
+  "panels": [
+    {
+      "id": 1,
+      "title": "Target Up",
+      "description": "Whether Prometheus can scrape the churn-api target (1 = reachable, 0 = unreachable). Alerts if the service disappears.",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "horizontal", "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{"color":"red","value":0},{"color":"green","value":1}] },
+          "mappings": [{"type":"value","options":{"0":{"text":"DOWN"},"1":{"text":"UP"}}}]
+        }
+      },
+      "targets": [{"datasource":"Prometheus","expr":"up{job=\"churn-api\"}","legendFormat":"up"}]
+    },
+    {
+      "id": 2,
+      "title": "Model Ready",
+      "description": "Gauge exported by the API indicating whether the ML pipeline is loaded and ready to serve (1 = ready, 0 = unavailable).",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{"color":"red","value":0},{"color":"green","value":1}] },
+          "mappings": [{"type":"value","options":{"0":{"text":"UNAVAILABLE"},"1":{"text":"READY"}}}]
+        }
+      },
+      "targets": [{"datasource":"Prometheus","expr":"model_ready","legendFormat":"model_ready"}]
+    },
+    {
+      "id": 3,
+      "title": "Request Rate by HTTP Status Code",
+      "description": "Per-second rate of HTTP requests grouped by status code over the last 2 minutes. Helps detect spikes in 4xx (client errors) or 5xx (server errors).",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 12, "x": 8, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
+      "targets": [{"datasource":"Prometheus","expr":"sum by (status_code) (rate(http_requests_total[2m]))","legendFormat":"HTTP {{status_code}}"}]
+    },
+    {
+      "id": 4,
+      "title": "Error Rate 4xx",
+      "description": "Fraction of requests returning 4xx (client-side validation errors, e.g. 422 Unprocessable Entity) over the last 2 minutes.",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 4 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "mode": "absolute", "steps": [{"color":"green","value":0},{"color":"yellow","value":0.05},{"color":"red","value":0.2}] } } },
+      "targets": [{"datasource":"Prometheus","expr":"sum(rate(http_requests_total{status_code=~\"4..\"}[2m])) / sum(rate(http_requests_total[2m]))","legendFormat":"4xx rate"}]
+    },
+    {
+      "id": 5,
+      "title": "Error Rate 5xx",
+      "description": "Fraction of requests returning 5xx (server-side inference or unexpected errors) over the last 2 minutes. Should remain at 0 in nominal operation.",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 4 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "mode": "absolute", "steps": [{"color":"green","value":0},{"color":"red","value":0.01}] } } },
+      "targets": [{"datasource":"Prometheus","expr":"sum(rate(http_requests_total{status_code=~\"5..\"}[2m])) / sum(rate(http_requests_total[2m]))","legendFormat":"5xx rate"}]
+    },
+    {
+      "id": 6,
+      "title": "Latency /predict (p50 and p95)",
+      "description": "50th and 95th percentile of end-to-end HTTP request latency for POST /predict. The p95 highlights tail latency and outliers from slow inferences.",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "s", "custom": { "lineWidth": 2 } } },
+      "targets": [
+        {"datasource":"Prometheus","expr":"histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{endpoint=\"/predict\"}[2m])))","legendFormat":"p50"},
+        {"datasource":"Prometheus","expr":"histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{endpoint=\"/predict\"}[2m])))","legendFormat":"p95"}
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Predictions per Class (rate)",
+      "description": "Per-second rate of model predictions split by predicted churn class (Yes / No). A shift in the Yes/No ratio can signal distribution drift.",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
+      "targets": [{"datasource":"Prometheus","expr":"sum by (predicted_class) (rate(predictions_total[2m]))","legendFormat":"{{predicted_class}}"}]
+    },
+    {
+      "id": 8,
+      "title": "Positive Prediction Rate (rolling 5m)",
+      "description": "Fraction of predictions classified as Churn=Yes over the last 5 minutes. A sustained increase may indicate distributional drift in incoming customers.",
+      "type": "timeseries",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 14 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1, "custom": { "lineWidth": 2 } } },
+      "targets": [{"datasource":"Prometheus","expr":"sum(rate(predictions_total{predicted_class=\"Yes\"}[5m])) / sum(rate(predictions_total[5m]))","legendFormat":"churn rate"}]
+      },
+    {
+      "id": 9,
+      "title": "Churn Probability Distribution",
+      "description": "Histogram of raw churn probability scores (buckets 0.0-1.0 step 0.1). The shape reveals whether the model is confident or uncertain on current traffic.",
+      "type": "barchart",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 14 },
+      "targets": [{"datasource":"Prometheus","expr":"sum by (le) (increase(churn_prediction_probability_bucket[5m]))","legendFormat":"le={{le}}"}]
+    },
+    {
+      "id": 10,
+      "title": "Decision Threshold",
+      "description": "Current optimal classification threshold loaded from model_metadata.json. Any change here indicates a model reload with a different threshold.",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 4, "x": 16, "y": 14 },
+      "fieldConfig": { "defaults": { "decimals": 4, "thresholds": { "mode": "absolute", "steps": [{"color":"blue","value":0}] } } },
+      "targets": [{"datasource":"Prometheus","expr":"model_decision_threshold","legendFormat":"threshold"}]
+    },
+    {
+      "id": 11,
+      "title": "Model Version",
+      "description": "Active model version label as reported by the model_info gauge. Useful for correlating metric changes with model promotions.",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 4, "x": 20, "y": 14 },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{"color":"blue","value":0}] } } },
+      "targets": [{"datasource":"Prometheus","expr":"model_info","legendFormat":"v{{version}}"}]
+    }
+  ]
+}
