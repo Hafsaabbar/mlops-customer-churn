@@ -214,7 +214,7 @@ def run_drift(base_url, rows, rate, duration, rng):
         if rng.random() < 0.9:
             row["Contract"] = "Month-to-month"
 
-        # Halve tenure (rounded), minimum 0
+        # Divide tenure by 4 (rounded), minimum 0
         new_tenure = max(0, round(row["tenure"] / 4))
         row["tenure"] = new_tenure
 
