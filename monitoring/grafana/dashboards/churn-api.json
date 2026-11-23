@@ -3,7 +3,7 @@
   "title": "Churn API - Overview",
   "description": "Service health, request traffic, latency and model prediction monitoring for the Customer Churn Prediction API.",
   "schemaVersion": 38,
-  "version": 1,
+  "version": 2,
   "refresh": "10s",
   "time": { "from": "now-30m", "to": "now" },
   "timezone": "browser",
@@ -44,7 +44,7 @@
       "title": "Request Rate by HTTP Status Code",
       "description": "Per-second rate of HTTP requests grouped by status code over the last 2 minutes. Helps detect spikes in 4xx (client errors) or 5xx (server errors).",
       "type": "timeseries",
-      "gridPos": { "h": 6, "w": 12, "x": 8, "y": 0 },
+      "gridPos": { "h": 6, "w": 16, "x": 8, "y": 0 },
       "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
       "targets": [{"datasource":"Prometheus","expr":"sum by (status_code) (rate(http_requests_total[2m]))","legendFormat":"HTTP {{status_code}}"}]
     },
@@ -60,11 +60,11 @@
     {
       "id": 5,
       "title": "Error Rate 5xx",
-      "description": "Fraction of requests returning 5xx (server-side inference or unexpected errors) over the last 2 minutes. Should remain at 0 in nominal operation.",
+      "description": "Fraction of requests returning 5xx (server-side inference or unexpected errors) over the last 2 minutes. Returns 0 instead of No data when no errors occur.",
       "type": "stat",
       "gridPos": { "h": 4, "w": 4, "x": 4, "y": 4 },
       "fieldConfig": { "defaults": { "unit": "percentunit", "thresholds": { "mode": "absolute", "steps": [{"color":"green","value":0},{"color":"red","value":0.01}] } } },
-      "targets": [{"datasource":"Prometheus","expr":"sum(rate(http_requests_total{status_code=~\"5..\"}[2m])) / sum(rate(http_requests_total[2m]))","legendFormat":"5xx rate"}]
+      "targets": [{"datasource":"Prometheus","expr":"(sum(rate(http_requests_total{status_code=~\"5..\"}[2m])) / sum(rate(http_requests_total[2m]))) or vector(0)","legendFormat":"5xx rate"}]
     },
     {
       "id": 6,
@@ -95,14 +95,14 @@
       "gridPos": { "h": 6, "w": 8, "x": 0, "y": 14 },
       "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0, "max": 1, "custom": { "lineWidth": 2 } } },
       "targets": [{"datasource":"Prometheus","expr":"sum(rate(predictions_total{predicted_class=\"Yes\"}[5m])) / sum(rate(predictions_total[5m]))","legendFormat":"churn rate"}]
-      },
+    },
     {
       "id": 9,
       "title": "Churn Probability Distribution",
-      "description": "Histogram of raw churn probability scores (buckets 0.0-1.0 step 0.1). The shape reveals whether the model is confident or uncertain on current traffic.",
-      "type": "barchart",
+      "description": "Heatmap of raw churn prediction probability scores over time based on churn_prediction_probability_bucket.",
+      "type": "heatmap",
       "gridPos": { "h": 6, "w": 8, "x": 8, "y": 14 },
-      "targets": [{"datasource":"Prometheus","expr":"sum by (le) (increase(churn_prediction_probability_bucket[5m]))","legendFormat":"le={{le}}"}]
+      "targets": [{"datasource":"Prometheus","expr":"sum by (le) (increase(churn_prediction_probability_bucket[$__rate_interval]))","format":"heatmap","legendFormat":"{{le}}"}]
     },
     {
       "id": 10,
@@ -116,11 +116,20 @@
     {
       "id": 11,
       "title": "Model Version",
-      "description": "Active model version label as reported by the model_info gauge. Useful for correlating metric changes with model promotions.",
+      "description": "Active model version label as reported by the model_info gauge. Displays the promoted champion version string.",
       "type": "stat",
       "gridPos": { "h": 6, "w": 4, "x": 20, "y": 14 },
+      "options": { "textMode": "name", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [{"color":"blue","value":0}] } } },
-      "targets": [{"datasource":"Prometheus","expr":"model_info","legendFormat":"v{{version}}"}]
+      "targets": [{"datasource":"Prometheus","expr":"model_info","legendFormat":"{{version}}"}]
+    },
+    {
+      "id": 12,
+      "title": "Alertes actives",
+      "description": "Table of currently firing Prometheus alerts showing alertname, severity, and active state.",
+      "type": "table",
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 20 },
+      "targets": [{"datasource":"Prometheus","expr":"ALERTS{alertstate=\"firing\"}","format":"table","instant":true}]
     }
   ]
 }
