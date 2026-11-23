@@ -74,6 +74,26 @@ MODEL_INFO = _get_or_create_gauge(
     ("version",),
 )
 
+_PROB_BUCKETS = [round(i * 0.1, 1) for i in range(11)]
+
+def _get_or_create_probability_histogram():
+    _name = "churn_prediction_probability"
+    if _name in REGISTRY._names_to_collectors:
+        return REGISTRY._names_to_collectors[_name]
+    return Histogram(
+        _name,
+        "Distribution of raw churn probability scores emitted by the model.",
+        buckets=_PROB_BUCKETS,
+    )
+
+CHURN_PREDICTION_PROBABILITY = _get_or_create_probability_histogram()
+
+MODEL_DECISION_THRESHOLD = _get_or_create_gauge(
+    "model_decision_threshold",
+    "Optimal classification threshold loaded from model metadata.",
+    (),
+)
+
 model_service = ModelService()
 
 
@@ -85,6 +105,8 @@ async def lifespan(app: FastAPI):
         MODEL_READY.set(1)
         if model_service.model_version:
             MODEL_INFO.labels(version=model_service.model_version).set(1)
+        if model_service.threshold is not None:
+            MODEL_DECISION_THRESHOLD.set(model_service.threshold)
     else:
         MODEL_READY.set(0)
     yield
@@ -249,6 +271,7 @@ def predict_churn(features: ChurnFeatures):
 
     # Prometheus prediction counter increment
     PREDICTIONS_TOTAL.labels(predicted_class=decision).inc()
+    CHURN_PREDICTION_PROBABILITY.observe(churn_prob)
 
     return PredictionResponse(
         churn_probability=churn_prob_rounded,
@@ -268,4 +291,6 @@ def prometheus_metrics():
     MODEL_READY.set(1 if model_service.ready else 0)
     if model_service.ready and model_service.model_version:
         MODEL_INFO.labels(version=model_service.model_version).set(1)
+    if model_service.ready and model_service.threshold is not None:
+        MODEL_DECISION_THRESHOLD.set(model_service.threshold)
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)

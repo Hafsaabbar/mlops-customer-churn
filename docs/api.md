@@ -152,6 +152,8 @@ Expose les métriques au format texte Prometheus standard :
 - `predictions_total{predicted_class}` : Compteur de décisions de churn émises (`Yes` / `No`).
 - `model_ready` : Jauge d'état du modèle (1 si prêt, 0 sinon).
 - `model_info{version}` : Jauge de version active.
+- `churn_prediction_probability_bucket` : Histogramme de la probabilité brute de churn (buckets de 0.0 à 1.0 par pas de 0.1). Alimenté avec la probabilité brute (non arrondie) de chaque prédiction réussie.
+- `model_decision_threshold` : Jauge du seuil de décision optimal lu dans `model_metadata.json` au chargement et rafraîchi à chaque appel de `/metrics`.
 
 ---
 
