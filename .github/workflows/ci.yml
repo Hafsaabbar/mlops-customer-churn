@@ -165,3 +165,40 @@ jobs:
         with:
           name: smoke-reports
           path: reports/ci/*.json
+
+  monitoring-config:
+    name: Monitoring Config
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Extract Prometheus Image Tag
+        run: |
+          PROM_IMAGE=$(grep -E 'image:\s*prom/prometheus:' docker-compose.yml | awk '{print $2}')
+          echo "PROMETHEUS_IMAGE=${PROM_IMAGE}" >> "$GITHUB_ENV"
+
+      - name: Validate Prometheus Configuration and Rules
+        run: |
+          docker run --rm --entrypoint promtool \
+            -v "${PWD}/monitoring/prometheus:/cfg:ro" \
+            -w /cfg \
+            "${{ env.PROMETHEUS_IMAGE }}" check config /cfg/prometheus.yml
+          docker run --rm --entrypoint promtool \
+            -v "${PWD}/monitoring/prometheus:/cfg:ro" \
+            -w /cfg \
+            "${{ env.PROMETHEUS_IMAGE }}" check rules /cfg/alerts.yml
+          docker run --rm --entrypoint promtool \
+            -v "${PWD}/monitoring/prometheus:/cfg:ro" \
+            -w /cfg \
+            "${{ env.PROMETHEUS_IMAGE }}" test rules /cfg/alerts_test.yml
+
+      - name: Validate Grafana Dashboard JSON
+        run: |
+          python3 -m json.tool monitoring/grafana/dashboards/churn-api.json > /dev/null
+
+      - name: Validate Docker Compose Monitoring Profile
+        run: |
+          docker compose --profile monitoring config -q
