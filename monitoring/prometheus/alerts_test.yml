@@ -1,0 +1,154 @@
+rule_files:
+  - alerts.yml
+
+evaluation_interval: 15s
+
+tests:
+  # Test 1: ChurnApiDown fires when API target is down for > 1m
+  - interval: 15s
+    input_series:
+      - series: 'up{job="churn-api"}'
+        values: '0+0x8' # 0 for 9 intervals = 120s
+    alert_rule_test:
+      - eval_time: 1m15s
+        alertname: ChurnApiDown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              job: "churn-api"
+            exp_annotations:
+              summary: "Churn API is unreachable"
+              description: "The churn-api target has been down for more than 1 minute."
+              decision: "Check container status via docker compose ps and restart the api container if needed."
+
+  # Test 2: ChurnModelNotReady fires when model_ready is 0 for > 30s
+  - interval: 15s
+    input_series:
+      - series: 'model_ready'
+        values: '0+0x5' # 0 for 6 intervals = 75s
+    alert_rule_test:
+      - eval_time: 45s
+        alertname: ChurnModelNotReady
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "Churn model is not ready"
+              description: "The inference model pipeline is unavailable (model_ready == 0) for more than 30 seconds."
+              decision: "Verify model artifacts presence and integrity in artifacts/, then initiate release rollback according to docs/deployment_strategy.md if required."
+
+  # Test 3: ChurnHighServerErrorRate fires when 5xx rate > 5% for > 2m
+  - interval: 15s
+    input_series:
+      - series: 'http_requests_total{endpoint="/predict",status_code="500"}'
+        values: '0+10x15' # 10 requests every 15s
+      - series: 'http_requests_total{endpoint="/predict",status_code="200"}'
+        values: '0+90x15' # 90 requests every 15s (500 is 10% > 5%)
+    alert_rule_test:
+      - eval_time: 2m15s
+        alertname: ChurnHighServerErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "High server error rate on /predict"
+              description: "Server-side error rate (5xx) on /predict exceeds 5% over a 2-minute window (observed for 2m)."
+              decision: "Inspect container logs for internal exceptions or inference pipeline failures; investigate potential bad payloads or code defects."
+
+  # Test 4: ChurnHighValidationErrorRate fires when 422 rate > 20% for > 2m
+  - interval: 15s
+    input_series:
+      - series: 'http_requests_total{endpoint="/predict",status_code="422"}'
+        values: '0+40x15' # 40 requests every 15s (40%)
+      - series: 'http_requests_total{endpoint="/predict",status_code="200"}'
+        values: '0+60x15'
+    alert_rule_test:
+      - eval_time: 2m15s
+        alertname: ChurnHighValidationErrorRate
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "High validation error rate on /predict"
+              description: "Client validation error rate (422) on /predict exceeds 20% over 2 minutes (baseline in stable traffic is 0%)."
+              decision: "Investigate upstream client payload contract adherence and data pipeline schema changes; do not retrain the model."
+
+  # Test 5: ChurnHighValidationErrorRate DOES NOT fire under stable traffic (0% 422)
+  - interval: 15s
+    input_series:
+      - series: 'http_requests_total{endpoint="/predict",status_code="422"}'
+        values: '0+0x15'
+      - series: 'http_requests_total{endpoint="/predict",status_code="200"}'
+        values: '0+100x15'
+    alert_rule_test:
+      - eval_time: 2m15s
+        alertname: ChurnHighValidationErrorRate
+        exp_alerts: []
+
+  # Test 6: ChurnHighLatencyP95 fires when p95 > 0.5s for > 5m
+  - interval: 30s
+    input_series:
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="0.1"}'
+        values: '0+0x30' # 0 in low buckets
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="0.5"}'
+        values: '0+10x30' # 10 out of 100 below 0.5
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="1.0"}'
+        values: '0+100x30' # all 100 below 1.0 -> p95 interpolated between 0.5 and 1.0 (~0.97s > 0.5s)
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="+Inf"}'
+        values: '0+100x30'
+    alert_rule_test:
+      - eval_time: 10m30s
+        alertname: ChurnHighLatencyP95
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "High p95 latency on /predict"
+              description: "95th percentile latency for /predict exceeds 0.5s over 5 minutes (threshold justified as 10x measured stable baseline of 0.0499s, with floor > 0.25s)."
+              decision: "Check host CPU, memory, and I/O resource utilization; inspect concurrent traffic and worker scaling."
+
+  # Test 7: ChurnHighLatencyP95 DOES NOT fire when latency is elevated only for 2 minutes then returns to normal
+  - interval: 30s
+    input_series:
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="0.1"}'
+        values: '0+0x4 500+500x20'
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="0.5"}'
+        values: '0+10x4 540+500x20'
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="1.0"}'
+        values: '0+100x4 900+500x20'
+      - series: 'http_request_duration_seconds_bucket{endpoint="/predict",le="+Inf"}'
+        values: '0+100x4 900+500x20'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: ChurnHighLatencyP95
+        exp_alerts: []
+
+  # Test 8: ChurnPositiveRateShift fires when drift shifts positive rate to 0.72 (> 0.49 + 0.12)
+  - interval: 30s
+    input_series:
+      - series: 'predictions_total{predicted_class="Yes"}'
+        values: '0+72x12' # 72 per 30s -> positive rate = 72%
+      - series: 'predictions_total{predicted_class="No"}'
+        values: '0+28x12' # 28 per 30s -> total = 100 per 30s
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: ChurnPositiveRateShift
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "Significant shift in positive churn prediction rate"
+              description: "Positive prediction rate deviates by more than 0.12 from the 0.49 baseline over 3m with at least 100 predictions (margin justified: 2.4 sigma at n=100, well below 0.2258 drift shift)."
+              decision: "Investigate distribution drift with an Evidently data and concept drift report; this signal indicates feature distribution change and does not prove model failure on its own; do not retrain immediately."
+
+  # Test 9: ChurnPositiveRateShift DOES NOT fire on stable traffic (rate ~ 0.51, within 0.49 +/- 0.05)
+  - interval: 30s
+    input_series:
+      - series: 'predictions_total{predicted_class="Yes"}'
+        values: '0+51x12' # 51% positive -> abs(0.51 - 0.49) = 0.02 <= 0.12
+      - series: 'predictions_total{predicted_class="No"}'
+        values: '0+49x12' # 49% negative -> total = 100 per 30s >= 100
+    alert_rule_test:
+      - eval_time: 4m
+        alertname: ChurnPositiveRateShift
+        exp_alerts: []

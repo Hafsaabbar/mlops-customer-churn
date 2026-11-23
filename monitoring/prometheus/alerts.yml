@@ -1,0 +1,65 @@
+groups:
+  - name: churn-api
+    rules:
+      - record: churn:positive_rate_3m
+        expr: sum(increase(predictions_total{predicted_class="Yes"}[3m])) / sum(increase(predictions_total[3m]))
+
+      - alert: ChurnApiDown
+        expr: up{job="churn-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Churn API is unreachable"
+          description: "The churn-api target has been down for more than 1 minute."
+          decision: "Check container status via docker compose ps and restart the api container if needed."
+
+      - alert: ChurnModelNotReady
+        expr: model_ready == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Churn model is not ready"
+          description: "The inference model pipeline is unavailable (model_ready == 0) for more than 30 seconds."
+          decision: "Verify model artifacts presence and integrity in artifacts/, then initiate release rollback according to docs/deployment_strategy.md if required."
+
+      - alert: ChurnHighServerErrorRate
+        expr: sum(rate(http_requests_total{endpoint="/predict",status_code=~"5.."}[2m])) / sum(rate(http_requests_total{endpoint="/predict"}[2m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High server error rate on /predict"
+          description: "Server-side error rate (5xx) on /predict exceeds 5% over a 2-minute window (observed for 2m)."
+          decision: "Inspect container logs for internal exceptions or inference pipeline failures; investigate potential bad payloads or code defects."
+
+      - alert: ChurnHighValidationErrorRate
+        expr: sum(rate(http_requests_total{endpoint="/predict",status_code="422"}[2m])) / sum(rate(http_requests_total{endpoint="/predict"}[2m])) > 0.20
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High validation error rate on /predict"
+          description: "Client validation error rate (422) on /predict exceeds 20% over 2 minutes (baseline in stable traffic is 0%)."
+          decision: "Investigate upstream client payload contract adherence and data pipeline schema changes; do not retrain the model."
+
+      - alert: ChurnHighLatencyP95
+        expr: histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{endpoint="/predict"}[5m]))) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High p95 latency on /predict"
+          description: "95th percentile latency for /predict exceeds 0.5s over 5 minutes (threshold justified as 10x measured stable baseline of 0.0499s, with floor > 0.25s)."
+          decision: "Check host CPU, memory, and I/O resource utilization; inspect concurrent traffic and worker scaling."
+
+      - alert: ChurnPositiveRateShift
+        expr: (abs(churn:positive_rate_3m - 0.49) > 0.12) and (sum(increase(predictions_total[3m])) >= 100)
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant shift in positive churn prediction rate"
+          description: "Positive prediction rate deviates by more than 0.12 from the 0.49 baseline over 3m with at least 100 predictions (margin justified: 2.4 sigma at n=100, well below 0.2258 drift shift)."
+          decision: "Investigate distribution drift with an Evidently data and concept drift report; this signal indicates feature distribution change and does not prove model failure on its own; do not retrain immediately."
